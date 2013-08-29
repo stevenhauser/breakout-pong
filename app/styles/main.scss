@@ -1,0 +1,77 @@
+/* Imports ---------------------------------------- */
+
+@import "compass";
+
+
+
+/* Vars ---------------------------------------- */
+
+$block-width:   10%;
+$block-height:  20px;
+$paddle-width:  2 * $block-width;
+$paddle-height: $block-height;
+$ball-size:     20px;
+
+
+
+/* Global styles ---------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: 1em/1.5 sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+/* Blocks ---------------------------------------- */
+
+.blocks-row {
+  height: $block-height;
+}
+
+.block {
+  @include transition(all 1s ease-in);
+  position: absolute;
+  width: $block-width;
+  height: $block-height;
+  border: 1px solid #000;
+  background: #f0f0f0;
+
+  &.falling {
+    @include transform(translate3d(0, 800px, 0) rotate(440deg));
+  }
+}
+
+
+
+/* Paddles ---------------------------------------- */
+
+.paddle {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: $paddle-width;
+  height: $paddle-height;
+  margin-left: -($paddle-width / 2);
+  border: 1px solid #000;
+  background: #f0f0f0;
+}
+
+
+
+/* Balls ---------------------------------------- */
+
+.ball {
+  position: absolute;
+  width: $ball-size;
+  height: $ball-size;
+  margin: (-$ball-size / 2) 0 0 (-$ball-size / 2);
+  border: 1px solid #000;
+  border-radius: $ball-size;
+  background: #f0f0f0;
+}
