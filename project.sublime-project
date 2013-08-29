@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/steven/Sites/breakout-pong",
+      "folder_exclude_patterns": [".tmp", "app/bower_components", "node_modules", "dist"]
+		}
+	]
+}
