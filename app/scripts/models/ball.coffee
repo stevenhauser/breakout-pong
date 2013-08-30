@@ -3,6 +3,7 @@ define (require) ->
   Entity = require "models/entity"
   boundable = require "models/mixins/boundable"
   bouncable = require "models/mixins/bouncable"
+  entities = require "entities"
 
   class Ball extends Entity
 
@@ -30,13 +31,20 @@ define (require) ->
       if @isOutOfBoundsX(newX)
         @bounceX()
         newX = @calcX()
-      if newY < @topBound()
+      if newY < @topBound() or @isCollidingWithPaddle()
         @bounceY()
         newY = @calcY()
       if newY > @bottomBound()
         @reset()
       @x(newX).y(newY)
       @
+
+    isCollidingWithPaddle: ->
+      p = entities.get("player")
+      isCollidingOnY = @y2() > p.y1()
+      return false unless isCollidingOnY
+      isCollidingOnX = p.x1() < @x1() < p.x2() or p.x1() < @x2() < p.x2()
+      isCollidingOnX and isCollidingOnY
 
     reset: ->
       @stopMoving()

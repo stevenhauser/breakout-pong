@@ -9,6 +9,7 @@ define (require) ->
       @bindEvents()
         .setDimensions()
         .setPaddleInitialX()
+        .setPaddleY()
         .showPaddle()
       @
 
@@ -24,6 +25,10 @@ define (require) ->
       @model.x(halfGameWidth - halfPaddleWidth)
       @
 
+    setPaddleY: ->
+      @model.y( @model.bottomBound() - @model.height() )
+      @
+
     showPaddle: ->
       @$el.removeClass("invisible")
       @
@@ -36,7 +41,7 @@ define (require) ->
       key is "left" or key is "right"
 
     onGameResized: ->
-      @setDimensions()
+      @setDimensions().setPaddleY()
 
     onKeydown: (key) ->
       return if @model.isMoving() or !@isMovementKey(key)
