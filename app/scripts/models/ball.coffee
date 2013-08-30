@@ -12,6 +12,8 @@ define (require) ->
 
     acceleration: 1.04
 
+    resetDelay: 300
+
     initialize: (attrs, opts) ->
       @bounds = opts.bounds
       @
@@ -28,19 +30,25 @@ define (require) ->
       if @isOutOfBoundsX(newX)
         @bounceX()
         newX = @calcX()
-      if @isOutOfBoundsY(newY)
+      if newY < @topBound()
         @bounceY()
         newY = @calcY()
+      if newY > @bottomBound()
+        @reset()
       @x(newX).y(newY)
+      @
 
     reset: ->
-      @set
-        x: @rightRelativeBound() / 2
-        y: @bottomRelativeBound() / 2
-        vx: @randomVelocity()
-        vy: @randomVelocity()
-        speedX: @randomSpeed()
-        speedY: @randomSpeed()
+      @stopMoving()
+      _.delay =>
+        @set
+          x: @rightRelativeBound() / 2
+          y: @bottomRelativeBound() / 2
+          vx: @randomVelocity()
+          vy: @randomVelocity()
+          speedX: @randomSpeed()
+          speedY: @randomSpeed()
+      , @resetDelay
       @
 
   _.extend Ball::, boundable, bouncable
