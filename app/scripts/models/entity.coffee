@@ -4,6 +4,7 @@ define (require) ->
 
   class Entity extends Base
 
+    # Simple boolean that can be set to force updating
     shouldUpdate: false
 
     constructor: ->
@@ -36,12 +37,34 @@ define (require) ->
         newCoord = if newCoord >= bound then newCoord else bound
       newCoord
 
-    move: (dir) ->
-      @set "vx", @get("speedX") * dir
+    move: (axis, dir) ->
+      axisUpper = axis.toUpperCase()
+      @set "v#{axis}", @get("speed#{axisUpper}") * dir
+      @
+
+    stopMoving: ->
+      @stopMovingX().stopMovingY()
       @
 
     isMoving: ->
       @get("vx") isnt 0 or @get("vy") isnt 0
+
+    doUpdate: ->
+      return @ unless @needsToUpdate()
+      @update()
+      @shouldUpdate = false
+      @
+
+    # Simple method that checks the boolean or other interesting
+    # methods. Meant to be overridden as needed.
+    needsToUpdate: ->
+      @shouldUpdate or @isMoving()
+
+    update: ->
+      @set
+        x: @constrainedX()
+        y: @constrainedY()
+      @
 
     onChangeObject: ->
       @shouldUpdate = true
@@ -50,6 +73,9 @@ define (require) ->
   Entity::vyIsPositive = _.partial Entity::velocityIsPositive, "y"
   Entity::constrainedX = _.partial Entity::constrainedCoord, "x"
   Entity::constrainedY = _.partial Entity::constrainedCoord, "y"
-  Entity::stopMoving   = _.partial Entity::move, 0
+  Entity::moveX        = _.partial Entity::move, "x"
+  Entity::moveY        = _.partial Entity::move, "y"
+  Entity::stopMovingX  = _.partial Entity::moveX, 0
+  Entity::stopMovingY  = _.partial Entity::moveY, 0
 
   Entity

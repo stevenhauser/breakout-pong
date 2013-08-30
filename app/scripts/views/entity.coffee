@@ -4,17 +4,21 @@ define (require) ->
 
   class Entity extends Base
 
+    shouldRender: false
+
     constructor: ->
       super
       @listenTo(@model, "change", @onEntityChange) if @model
-      @shouldRender = true
+      @render()
+
+    doRender: ->
+      return unless @shouldRender or @needsToRender()
       @render()
       @shouldRender = false
-
-    render: ->
-      return unless @shouldRender
-      @shouldRender = false
       @
+
+    # Override as needed when setting `shouldRender` isn't enough
+    needsToRender: -> false
 
     onEntityChange: ->
       @shouldRender = true

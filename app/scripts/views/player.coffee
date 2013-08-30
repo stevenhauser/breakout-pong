@@ -36,8 +36,6 @@ define (require) ->
       @
 
     render: ->
-      return unless @shouldRender
-      @shouldRender = false
       @el.style.left = @model.get("x") + "px"
       @
 
@@ -49,8 +47,8 @@ define (require) ->
 
     onKeydown: (key) ->
       return if @model.isMoving() or !@isMovementKey(key)
-      @model.move(if key is "left" then -1 else 1)
+      @model.moveX(if key is "left" then -1 else 1)
 
     onKeyup: (key) ->
       return unless @isMovementKey(key)
-      @model.stopMoving()
+      @model.stopMovingX()

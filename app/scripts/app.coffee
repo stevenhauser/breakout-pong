@@ -45,11 +45,11 @@ define (require) ->
       @
 
     update: ->
-      model.update() for model in @models
+      model.doUpdate() for model in @models
       @
 
     render: ->
-      view.render() for view in @views
+      view.doRender() for view in @views
       @
 
     tick: ->
