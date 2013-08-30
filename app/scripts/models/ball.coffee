@@ -31,8 +31,13 @@ define (require) ->
       if @isOutOfBoundsX(newX)
         @bounceX()
         newX = @calcX()
-      if newY < @topBound() or @isCollidingWithPaddle()
+      if newY < @topBound()
         @bounceY()
+        newY = @calcY()
+      if @isCollidingWithPaddle()
+        # Ensure vy is -1 so the ball doesn't jiggle
+        # on the paddle and rapidly bounce up and down
+        @bounceY().vy(-1)
         newY = @calcY()
       if newY > @bottomBound()
         @reset()
