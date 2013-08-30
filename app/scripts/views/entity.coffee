@@ -11,6 +11,12 @@ define (require) ->
       @listenTo(@model, "change", @onEntityChange) if @model
       @render()
 
+    setDimensions: ->
+      @model.set
+        width: @el.offsetWidth
+        height: @el.offsetHeight
+      @
+
     doRender: ->
       return unless @shouldRender or @needsToRender()
       @render()

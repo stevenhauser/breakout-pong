@@ -7,7 +7,7 @@ define (require) ->
 
     initialize: ->
       @bindEvents()
-        .setPaddleDimensions()
+        .setDimensions()
         .setPaddleInitialX()
         .showPaddle()
       @
@@ -16,12 +16,6 @@ define (require) ->
       @listenTo vent, "game:resized", @onGameResized
       @listenTo vent, "controls:keydown", @onKeydown
       @listenTo vent, "controls:keyup", @onKeyup
-      @
-
-    setPaddleDimensions: ->
-      @model.set
-        width: @el.offsetWidth
-        height: @el.offsetHeight
       @
 
     setPaddleInitialX: ->

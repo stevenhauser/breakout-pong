@@ -2,6 +2,8 @@ define (require) ->
 
   vent     = require "vent"
   Paddle   = require "models/paddle"
+  Ball     = require "models/ball"
+  BallView = require "views/ball"
   Player   = require "views/player"
   Bounds   = require "views/bounds"
   Controls = require "views/controls"
@@ -25,8 +27,9 @@ define (require) ->
       @controls = new Controls
       @
 
-    addView: (view) ->
+    addView: (view, addModel) ->
       @views.push(view)
+      @addModel(view.model) if addModel
       @
 
     addModel: (model) ->
@@ -39,9 +42,13 @@ define (require) ->
       player = new Player
         el: "#player-1"
         model: new Paddle {}, { bounds: @bounds }
-      @addView(player)
-      @addModel(player.model)
+      @addView(player, true)
       window.player = player
+      ball = new BallView
+        el: "#ball"
+        model: new Ball {}, { bounds: @bounds }
+      @addView(ball, true)
+      window.ball = ball
       @
 
     update: ->
