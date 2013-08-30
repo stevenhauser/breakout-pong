@@ -26,22 +26,11 @@ define (require) ->
       _.random(@minSpeed, @maxSpeed)
 
     update: ->
-      newX = @calcX()
-      newY = @calcY()
-      if @isOutOfBoundsX(newX)
-        @bounceX()
-        newX = @calcX()
-      if newY < @topBound()
-        @bounceY()
-        newY = @calcY()
-      if @isCollidingWithPaddle()
-        # Ensure vy is -1 so the ball doesn't jiggle
-        # on the paddle and rapidly bounce up and down
-        @bounceY().vy(-1)
-        newY = @calcY()
-      if newY > @bottomBound()
-        @reset()
-      @x(newX).y(newY)
+      @x(@calcX()).y(@calcY())
+      if @isOnBoundX() then @bounceX()
+      if @isOnTopBound() then @bounceY()
+      if @isOutsideBottomBound() then @reset()
+      if @isCollidingWithPaddle() then @bounceY().vy(-1)
       @
 
     isCollidingWithPaddle: ->
@@ -55,8 +44,8 @@ define (require) ->
       @stopMoving()
       _.delay =>
         @set
-          x: @rightRelativeBound() / 2
-          y: @bottomRelativeBound() / 2
+          x: @midBoundX()
+          y: @midBoundY()
           vx: @randomVelocity()
           vy: @randomVelocity()
           speedX: @randomSpeed()

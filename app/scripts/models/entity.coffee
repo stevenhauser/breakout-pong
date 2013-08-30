@@ -30,9 +30,9 @@ define (require) ->
       newCoord = @calcCoord(axis)
       isPositive = @["v#{axis}IsPositive"]()
       bound = if axis is "y"
-        if isPositive then @bottomRelativeBound() else @topBound()
+        if isPositive then @bottomBound() else @topBound()
       else
-        if isPositive then @rightRelativeBound() else @leftBound()
+        if isPositive then @rightBound() else @leftBound()
       if isPositive
         newCoord = if newCoord <= bound then newCoord else bound
       else

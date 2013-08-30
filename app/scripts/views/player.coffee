@@ -26,7 +26,7 @@ define (require) ->
       @
 
     setPaddleY: ->
-      @model.y( @model.bottomBound() - @model.height() )
+      @model.y(@model.bottomBound())
       @
 
     showPaddle: ->
