@@ -25,7 +25,7 @@ define (require) ->
       @get("v#{axis}") > 0
 
     constrainedCoord: (axis) ->
-      newCoord = @get(axis) + @get("v#{axis}")
+      newCoord = @calcCoord(axis)
       isPositive = @["v#{axis}IsPositive"]()
       bound = if axis is "y"
         if isPositive then @bottomRelativeBound() else @topBound()
@@ -36,6 +36,10 @@ define (require) ->
       else
         newCoord = if newCoord >= bound then newCoord else bound
       newCoord
+
+    calcCoord: (axis) ->
+      vector = @get("speed#{axis.toUpperCase()}") * @get("v#{axis}")
+      @get(axis) + vector
 
     move: (axis, dir) ->
       axisUpper = axis.toUpperCase()
@@ -77,5 +81,7 @@ define (require) ->
   Entity::moveY        = _.partial Entity::move, "y"
   Entity::stopMovingX  = _.partial Entity::moveX, 0
   Entity::stopMovingY  = _.partial Entity::moveY, 0
+  Entity::calcX        = _.partial Entity::calcCoord, "x"
+  Entity::calcY        = _.partial Entity::calcCoord, "y"
 
   Entity
