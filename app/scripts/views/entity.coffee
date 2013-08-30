@@ -12,9 +12,7 @@ define (require) ->
       @render()
 
     setDimensions: ->
-      @model.set
-        width: @el.offsetWidth
-        height: @el.offsetHeight
+      @model.width(@el.offsetWidth).height(@el.offsetHeight)
       @
 
     doRender: ->

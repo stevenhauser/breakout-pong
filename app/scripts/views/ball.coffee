@@ -11,6 +11,6 @@ define (require) ->
       @
 
     render: ->
-      @el.style.left = @model.get("x") + "px"
-      @el.style.top  = @model.get("y") + "px"
+      @el.style.left = @model.x() + "px"
+      @el.style.top  = @model.y() + "px"
       @

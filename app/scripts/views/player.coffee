@@ -20,9 +20,8 @@ define (require) ->
 
     setPaddleInitialX: ->
       halfGameWidth = @model.rightBound() / 2
-      halfPaddleWidth = @model.get("width") / 2
-      @model.set
-        x: halfGameWidth - halfPaddleWidth
+      halfPaddleWidth = @model.width() / 2
+      @model.x(halfGameWidth - halfPaddleWidth)
       @
 
     showPaddle: ->
@@ -30,7 +29,7 @@ define (require) ->
       @
 
     render: ->
-      @el.style.left = @model.get("x") + "px"
+      @el.style.left = @model.x() + "px"
       @
 
     isMovementKey: (key) ->

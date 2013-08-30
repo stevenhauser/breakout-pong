@@ -31,9 +31,7 @@ define (require) ->
       if @isOutOfBoundsY(newY)
         @bounceY()
         newY = @calcY()
-      @set
-        x: newX
-        y: newY
+      @x(newX).y(newY)
 
     reset: ->
       @set

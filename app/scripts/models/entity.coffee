@@ -11,6 +11,8 @@ define (require) ->
       super
       @on "change", @onChangeObject
 
+    shorthand: "width height x y speedX speedY vx vy".split(" ")
+
     defaults: ->
       width: 0
       height: 0
@@ -22,7 +24,7 @@ define (require) ->
       vy: 0
 
     velocityIsPositive: (axis) ->
-      @get("v#{axis}") > 0
+      @["v#{axis}"]() > 0
 
     constrainedCoord: (axis) ->
       newCoord = @calcCoord(axis)
@@ -38,12 +40,12 @@ define (require) ->
       newCoord
 
     calcCoord: (axis) ->
-      vector = @get("speed#{axis.toUpperCase()}") * @get("v#{axis}")
-      @get(axis) + vector
+      vector = @["speed#{axis.toUpperCase()}"]() * @["v#{axis}"]()
+      @[axis]() + vector
 
     move: (axis, dir) ->
       axisUpper = axis.toUpperCase()
-      @set "v#{axis}", @get("speed#{axisUpper}") * dir
+      @["v#{axis}"]( @["speed#{axisUpper}"]() * dir )
       @
 
     stopMoving: ->
@@ -51,7 +53,7 @@ define (require) ->
       @
 
     isMoving: ->
-      @get("vx") isnt 0 or @get("vy") isnt 0
+      @vx() isnt 0 or @vy() isnt 0
 
     doUpdate: ->
       return @ unless @needsToUpdate()
@@ -65,9 +67,7 @@ define (require) ->
       @shouldUpdate or @isMoving()
 
     update: ->
-      @set
-        x: @constrainedX()
-        y: @constrainedY()
+      @x(@constrainedX()).y(@constrainedY())
       @
 
     onChangeObject: ->
@@ -83,5 +83,7 @@ define (require) ->
   Entity::stopMovingY  = _.partial Entity::moveY, 0
   Entity::calcX        = _.partial Entity::calcCoord, "x"
   Entity::calcY        = _.partial Entity::calcCoord, "y"
+
+  Entity.shorthandify()
 
   Entity

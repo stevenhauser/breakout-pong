@@ -4,15 +4,15 @@ define (require) ->
 
     reverseVelocity: (axis) ->
       velProp = "v#{axis}"
-      @set velProp, @get(velProp) * -1
+      @[velProp]( @[velProp]() * -1 )
       @
 
     increaseSpeed: (axis) ->
       axisUpper = axis.toUpperCase()
       speedProp = "speed#{axisUpper}"
-      newSpeed = @get(speedProp) * @acceleration
+      newSpeed = @[speedProp]() * @acceleration
       newSpeed = if newSpeed < @maxSpeed then newSpeed else @maxSpeed
-      @set speedProp, newSpeed
+      @[speedProp](newSpeed)
       @
 
     bounce: (axis) ->
