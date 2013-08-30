@@ -55,6 +55,14 @@ define (require) ->
     isMoving: ->
       @vx() isnt 0 or @vy() isnt 0
 
+    x1: -> @x()
+
+    x2: -> @x() + @width()
+
+    y1: -> @y()
+
+    y2: -> @y() + @height()
+
     doUpdate: ->
       return @ unless @needsToUpdate()
       @update()
