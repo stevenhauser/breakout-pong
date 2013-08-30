@@ -1,2 +1,3 @@
-require ["app"], (app) ->
-  console.log("hello from main")
+require ["app"], (App) ->
+
+  window.app = (new App).start()
