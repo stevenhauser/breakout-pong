@@ -37,7 +37,7 @@ define (require) ->
       key is "left" or key is "right"
 
     onGameResized: ->
-      @setPaddleDimensions()
+      @setDimensions()
 
     onKeydown: (key) ->
       return if @model.isMoving() or !@isMovementKey(key)
