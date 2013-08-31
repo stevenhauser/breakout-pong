@@ -31,7 +31,7 @@ define (require) ->
       if @isOnBoundX() then @bounceX()
 
       if @isOnTopBound() then @bounceY()
-      else if @isOutsideBottomBound() then @reset()
+      else if @isOutsideBottomBound() then @delayReset()
 
       if @isCollidingWith(entities.get("player")) then @bounceY().vy(-1)
       else if @isCollidingWithBricks() then @bounceY()
@@ -47,16 +47,18 @@ define (require) ->
 
     reset: ->
       @stopMoving()
-      _.delay =>
-        @set
-          x: @midBoundX()
-          y: @midBoundY()
-          vx: @randomVelocity()
-          vy: @randomVelocity()
-          speedX: @randomSpeed()
-          speedY: @randomSpeed()
-      , @resetDelay
+      @set
+        x: @midBoundX()
+        y: @midBoundY()
+        vx: @randomVelocity()
+        vy: @randomVelocity()
+        speedX: @randomSpeed()
+        speedY: @randomSpeed()
       @
+
+    delayReset: ->
+      @stopMoving()
+      _.delay (=> @reset()), @resetDelay
 
   _.extend Ball::, boundable, bouncable, collidable
 
