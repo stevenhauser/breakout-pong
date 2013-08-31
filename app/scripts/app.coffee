@@ -1,13 +1,15 @@
 define (require) ->
 
-  vent     = require "vent"
-  entities = require "entities"
-  Paddle   = require "models/paddle"
-  Ball     = require "models/ball"
-  BallView = require "views/ball"
-  Player   = require "views/player"
-  Bounds   = require "views/bounds"
-  Controls = require "views/controls"
+  vent         = require "vent"
+  entities     = require "entities"
+  Paddle       = require "models/paddle"
+  Ball         = require "models/ball"
+  BallView     = require "views/ball"
+  Player       = require "views/player"
+  Bricks       = require "collections/bricks"
+  BricksView   = require "views/bricks"
+  Bounds       = require "views/bounds"
+  Controls     = require "views/controls"
 
   raf      = requestAnimationFrame
 
@@ -50,6 +52,13 @@ define (require) ->
         model: new Ball {}, { bounds: @bounds }
       @addView(ball).addEntity("ball", ball.model)
       window.ball = ball
+
+      bricks = new BricksView
+        el: "#blocks-grid"
+        collection: new Bricks null, { rows: 5, cols: 10, bounds: @bounds }
+      for brickCid, brickView of bricks.childViews
+        @addView(brickView).addEntity("brick-#{brickCid}", brickView.model)
+      bricks.render()
 
       @
 
