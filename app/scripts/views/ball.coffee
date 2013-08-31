@@ -2,6 +2,7 @@ define (require) ->
 
   Entity = require "views/entity"
   vent = require "vent"
+  utils = require "utils"
 
   class Ball extends Entity
 
@@ -11,6 +12,6 @@ define (require) ->
       @
 
     render: ->
-      @el.style.left = @model.x() + "px"
-      @el.style.top  = @model.y() + "px"
+      @el.style.left = utils.pixelize @model.x()
+      @el.style.top  = utils.pixelize @model.y()
       @

@@ -2,6 +2,7 @@ define (require) ->
 
   Entity = require "views/entity"
   vent = require "vent"
+  utils = require "utils"
 
   class Player extends Entity
 
@@ -34,7 +35,7 @@ define (require) ->
       @
 
     render: ->
-      @el.style.left = @model.x() + "px"
+      @el.style.left = utils.pixelize @model.x()
       @
 
     isMovementKey: (key) ->
