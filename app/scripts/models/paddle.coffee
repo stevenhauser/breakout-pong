@@ -6,7 +6,7 @@ define (require) ->
   class Paddle extends Entity
 
     defaults: ->
-      _.extend {}, super, { speedX: 2.5 }
+      _.extend {}, super, { speedX: 5 }
 
     initialize: (attrs, opts) ->
       @bounds = opts.bounds

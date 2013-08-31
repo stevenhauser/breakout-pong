@@ -11,24 +11,34 @@ define (require) ->
       super
       @on "change", @onChangeObject
 
-    shorthand: "width height x y speedX speedY vx vy".split(" ")
+    shorthand: [
+      "width"
+      "height"
+      "x"
+      "y"
+      "dirX"
+      "dirY"
+      "speedX"
+      "speedY"
+      "vx"
+      "vy"
+    ]
 
     defaults: ->
       width: 0
       height: 0
       x: 0
       y: 0
+      dirX: 1 # must be -1, 0, or 1
+      dirY: 1 # must be -1, 0, or 1
       speedX: 0
       speedY: 0
       vx: 0
       vy: 0
 
-    velocityIsPositive: (axis) ->
-      @["v#{axis}"]() > 0
-
     constrainedCoord: (axis) ->
       newCoord = @calcCoord(axis)
-      isPositive = @["v#{axis}IsPositive"]()
+      isPositive = @["v#{axis}"]() > 0
       bound = if axis is "y"
         if isPositive then @bottomBound() else @topBound()
       else
@@ -40,12 +50,16 @@ define (require) ->
       newCoord
 
     calcCoord: (axis) ->
-      vector = @["speed#{axis.toUpperCase()}"]() * @["v#{axis}"]()
-      @[axis]() + vector
+      @[axis]() + @["v#{axis}"]()
 
     move: (axis, dir) ->
       axisUpper = axis.toUpperCase()
-      @["v#{axis}"]( @["speed#{axisUpper}"]() * dir )
+      @["dir#{axisUpper}"](dir).calculateVelocity(axis)
+      @
+
+    calculateVelocity: (axis) ->
+      axisUpper = axis.toUpperCase()
+      @["v#{axis}"]( @["speed#{axisUpper}"]() * @["dir#{axisUpper}"]() )
       @
 
     stopMoving: ->
@@ -81,16 +95,16 @@ define (require) ->
     onChangeObject: ->
       @shouldUpdate = true
 
-  Entity::vxIsPositive = _.partial Entity::velocityIsPositive, "x"
-  Entity::vyIsPositive = _.partial Entity::velocityIsPositive, "y"
-  Entity::constrainedX = _.partial Entity::constrainedCoord, "x"
-  Entity::constrainedY = _.partial Entity::constrainedCoord, "y"
-  Entity::moveX        = _.partial Entity::move, "x"
-  Entity::moveY        = _.partial Entity::move, "y"
-  Entity::stopMovingX  = _.partial Entity::moveX, 0
-  Entity::stopMovingY  = _.partial Entity::moveY, 0
-  Entity::calcX        = _.partial Entity::calcCoord, "x"
-  Entity::calcY        = _.partial Entity::calcCoord, "y"
+  Entity::constrainedX       = _.partial Entity::constrainedCoord, "x"
+  Entity::constrainedY       = _.partial Entity::constrainedCoord, "y"
+  Entity::moveX              = _.partial Entity::move, "x"
+  Entity::moveY              = _.partial Entity::move, "y"
+  Entity::stopMovingX        = _.partial Entity::moveX, 0
+  Entity::stopMovingY        = _.partial Entity::moveY, 0
+  Entity::calculateVelocityX = _.partial Entity::calculateVelocity, "x"
+  Entity::calculateVelocityY = _.partial Entity::calculateVelocity, "y"
+  Entity::calcX              = _.partial Entity::calcCoord, "x"
+  Entity::calcY              = _.partial Entity::calcCoord, "y"
 
   Entity.shorthandify()
 

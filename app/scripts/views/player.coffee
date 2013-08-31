@@ -9,8 +9,7 @@ define (require) ->
     initialize: ->
       @bindEvents()
         .setDimensions()
-        .setPaddleInitialX()
-        .setPaddleY()
+        .setPaddleInitialCoords()
         .showPaddle()
       @
 
@@ -20,14 +19,10 @@ define (require) ->
       @listenTo vent, "controls:keyup", @onKeyup
       @
 
-    setPaddleInitialX: ->
-      halfGameWidth = @model.rightBound() / 2
-      halfPaddleWidth = @model.width() / 2
-      @model.x(halfGameWidth - halfPaddleWidth)
-      @
-
-    setPaddleY: ->
-      @model.y(@model.bottomBound())
+    setPaddleInitialCoords: ->
+      @model
+        .x(@model.midBoundX())
+        .y(@model.bottomBound())
       @
 
     showPaddle: ->

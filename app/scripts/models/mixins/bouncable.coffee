@@ -2,9 +2,9 @@ define (require) ->
 
   bouncable =
 
-    reverseVelocity: (axis) ->
-      velProp = "v#{axis}"
-      @[velProp]( @[velProp]() * -1 )
+    reverseDirection: (axis) ->
+      dirProp = "dir#{axis.toUpperCase()}"
+      @[dirProp]( @[dirProp]() * -1 )
       @
 
     increaseSpeed: (axis) ->
@@ -16,14 +16,14 @@ define (require) ->
       @
 
     bounce: (axis) ->
-      @increaseSpeed(axis).reverseVelocity(axis)
+      @increaseSpeed(axis).reverseDirection(axis).calculateVelocity(axis)
       @
 
-  bouncable.reverseVelocityX  = _.partial bouncable.reverseVelocity, "x"
-  bouncable.reverseVelocityY  = _.partial bouncable.reverseVelocity, "y"
-  bouncable.increaseSpeedX = _.partial bouncable.increaseSpeed, "x"
-  bouncable.increaseSpeedY = _.partial bouncable.increaseSpeed, "y"
-  bouncable.bounceX           = _.partial bouncable.bounce, "x"
-  bouncable.bounceY           = _.partial bouncable.bounce, "y"
+  bouncable.reverseDirectionX  = _.partial bouncable.reverseDirection, "x"
+  bouncable.reverseDirectionY  = _.partial bouncable.reverseDirection, "y"
+  bouncable.increaseSpeedX     = _.partial bouncable.increaseSpeed, "x"
+  bouncable.increaseSpeedY     = _.partial bouncable.increaseSpeed, "y"
+  bouncable.bounceX            = _.partial bouncable.bounce, "x"
+  bouncable.bounceY            = _.partial bouncable.bounce, "y"
 
   bouncable

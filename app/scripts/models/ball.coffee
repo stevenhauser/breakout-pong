@@ -20,7 +20,7 @@ define (require) ->
       @bounds = opts.bounds
       @
 
-    randomVelocity: ->
+    randomDirection: ->
       if Math.random() > .5 then 1 else -1
 
     randomSpeed: ->
@@ -33,10 +33,11 @@ define (require) ->
       if @isOnTopBound() then @bounceY()
       else if @isOutsideBottomBound() then @delayReset()
 
-      if @isCollidingWith(entities.get("player")) then @bounceY().vy(-1)
+      if @isCollidingWith(entities.get("player")) then @bounceOffPlayer()
       else if @isCollidingWithBricks() then @bounceY()
       @
 
+    # @TODO: This is sloppy. Clean it up.
     isCollidingWithBricks: ->
       bricks = _.filter entities.all(), (entity, name) -> name.indexOf("brick") > -1
       for brickName, brick of bricks
@@ -45,15 +46,21 @@ define (require) ->
           return true
       false
 
+    bounceOffPlayer: ->
+      player = entities.get("player")
+      @bounceY()
+      @vx( @vx() + player.vx() / 7 )
+      @
+
     reset: ->
-      @stopMoving()
-      @set
+      @stopMoving().set
         x: @midBoundX()
         y: @midBoundY()
-        vx: @randomVelocity()
-        vy: @randomVelocity()
+        dirX: @randomDirection()
+        dirY: @randomDirection()
         speedX: @randomSpeed()
         speedY: @randomSpeed()
+      @calculateVelocityX().calculateVelocityY()
       @
 
     delayReset: ->
