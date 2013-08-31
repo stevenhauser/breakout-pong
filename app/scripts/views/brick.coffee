@@ -13,3 +13,11 @@ define (require) ->
       @el.style.width  = utils.pixelize @model.width()
       @el.style.height = utils.pixelize @model.height()
       @
+
+    fall: ->
+      @$el.addClass("falling")
+      @
+
+    remove: ->
+      @fall()
+      _.delay (=> super), 1000
