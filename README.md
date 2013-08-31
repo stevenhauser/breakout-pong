@@ -5,6 +5,10 @@ Simple, experimental, HTML-based breakout-style game that uses
 I haven't built many games except very simple ones and this is mostly a
 learning project for me.
 
+## Demo
+
+Presumably you can play a demo of this in-progress experiment [here](http://stevenhauser.github.io/breakout-pong/) but no guarantees on its unbrokenness.
+
 ## Todos
 
 - **Improve graphics.**
