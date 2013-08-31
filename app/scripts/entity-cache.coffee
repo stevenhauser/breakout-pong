@@ -16,6 +16,7 @@ define (require) ->
       if !overwrite and @entities[name]?
         throw "EntityCache::set - Already has entity with name `#{name}`"
       @entities[name] = entity
+      @listenTo entity, "destroy", @onDestroyEntity
       @
 
     remove: (entityOrName) ->
@@ -25,5 +26,14 @@ define (require) ->
           isTheEntity = v is entityOrName
           key = k if isTheEntity
           isTheEntity
-      @[key] = null
+      entity = @entities[key]
+      delete @entities[key]
+      @stopListening(entity)
       @
+
+    onDestroyEntity: (entity) ->
+      @remove(entity)
+
+  _.extend EntityCache::, Backbone.Events
+
+  EntityCache

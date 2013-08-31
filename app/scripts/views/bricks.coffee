@@ -8,16 +8,29 @@ define (require) ->
     itemView: Brick
 
     initialize: ->
-      @createChildViews()
+      @bindEvents().createChildViews()
+      @
+
+    bindEvents: ->
+      @listenTo @collection, "remove", @onRemove
       @
 
     createChildViews: ->
       @childViews = {}
-      @collection.each (brick) =>
-        @childViews[brick.cid] = new Brick(model: brick)
+      @collection.each (model) => @addChildView(model)
       @
 
-    render: ->
-      els = _.map @childViews, (view) -> view.el
-      @$el.append(els)
+    addChildView: (model) ->
+      view = new @itemView(model: model)
+      @childViews[model.cid] = view
+      @$el.append view.el
       @
+
+    removeChildView: (modelCid) ->
+      view = @childViews[modelCid]
+      @childViews[modelCid] = null
+      view.remove()
+      @
+
+    onRemove: (brick) ->
+      @removeChildView brick.cid

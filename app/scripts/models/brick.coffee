@@ -14,6 +14,7 @@ define (require) ->
       @bindEvents().calculateGeometry()
 
     bindEvents: ->
+      @on "collided", @onCollided
       @listenTo vent, "game:resized", @onGameResized
       @
 
@@ -32,6 +33,10 @@ define (require) ->
 
     onGameResized: ->
       @calculateGeometry()
+
+    onCollided: ->
+      @destroy()
+
 
   _.extend Brick::, boundable
 

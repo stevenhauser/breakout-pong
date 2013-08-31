@@ -58,7 +58,6 @@ define (require) ->
         collection: new Bricks null, { rows: 5, cols: 10, bounds: @bounds }
       for brickCid, brickView of bricks.childViews
         @addView(brickView).addEntity("brick-#{brickCid}", brickView.model)
-      bricks.render()
 
       @
 

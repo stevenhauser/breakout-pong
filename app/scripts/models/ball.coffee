@@ -29,10 +29,21 @@ define (require) ->
     update: ->
       @x(@calcX()).y(@calcY())
       if @isOnBoundX() then @bounceX()
+
       if @isOnTopBound() then @bounceY()
-      if @isOutsideBottomBound() then @reset()
+      else if @isOutsideBottomBound() then @reset()
+
       if @isCollidingWith(entities.get("player")) then @bounceY().vy(-1)
+      else if @isCollidingWithBricks() then @bounceY()
       @
+
+    isCollidingWithBricks: ->
+      bricks = _.filter entities.all(), (entity, name) -> name.indexOf("brick") > -1
+      for brickName, brick of bricks
+        if @isCollidingWith(brick)
+          brick.trigger("collided", @)
+          return true
+      false
 
     reset: ->
       @stopMoving()
