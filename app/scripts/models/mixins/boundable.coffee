@@ -32,7 +32,7 @@ define (require) ->
 
     isOnBound: (bound) ->
       coord = getCoordFromBound(bound)
-      @["#{coord}1"]() < @getBound(bound) < @["#{coord}2"]()
+      @["#{coord}1"]() <= @getBound(bound) <= @["#{coord}2"]()
 
     isOutsideBound: (bound) ->
       coord = getCoordFromBound(bound)

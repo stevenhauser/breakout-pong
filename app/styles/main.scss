@@ -20,6 +20,11 @@ $ball-size:     20px;
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   font: 1em/1.5 sans-serif;
   margin: 0;

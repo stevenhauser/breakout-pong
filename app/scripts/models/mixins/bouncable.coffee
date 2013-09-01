@@ -17,6 +17,7 @@ define (require) ->
 
     bounce: (axis) ->
       @increaseSpeed(axis).reverseDirection(axis).calculateVelocity(axis)
+      @[axis](@calcCoord(axis))
       @
 
   bouncable.reverseDirectionX  = _.partial bouncable.reverseDirection, "x"

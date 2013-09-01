@@ -37,17 +37,13 @@ define (require) ->
       vy: 0
 
     constrainedCoord: (axis) ->
-      newCoord = @calcCoord(axis)
-      isPositive = @["v#{axis}"]() > 0
-      bound = if axis is "y"
-        if isPositive then @bottomBound() else @topBound()
-      else
-        if isPositive then @rightBound() else @leftBound()
-      if isPositive
-        newCoord = if newCoord <= bound then newCoord else bound
-      else
-        newCoord = if newCoord >= bound then newCoord else bound
-      newCoord
+      newCoord     = @calcCoord(axis)
+      isPositive   = @["v#{axis}"]() > 0
+      boundMethods = if axis is "y" then ["top", "bottom"] else ["left", "right"]
+      bound        = boundMethods[~~isPositive] # converts boolean to integer
+      boundVal     = @["#{bound}Bound"]()
+      mathMethod   = if isPositive then "min" else "max"
+      Math[mathMethod](newCoord, boundVal)
 
     calcCoord: (axis) ->
       @[axis]() + @["v#{axis}"]()
@@ -68,6 +64,14 @@ define (require) ->
 
     isMoving: ->
       @vx() isnt 0 or @vy() isnt 0
+
+    isMovingUp: -> @vy() < 0
+
+    isMovingDown: -> @vy() > 0
+
+    isMovingRight: -> @vx() > 0
+
+    isMovingLeft: -> @vx() < 0
 
     x1: -> @x()
 

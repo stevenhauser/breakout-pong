@@ -26,15 +26,16 @@ define (require) ->
     randomSpeed: ->
       _.random(@minSpeed, @maxSpeed)
 
+    # y should only be constrained on the top
+    constrainedY: ->
+      Math.max(@calcY(), @topBound())
+
     update: ->
-      @x(@calcX()).y(@calcY())
-      if @isOnBoundX() then @bounceX()
-
-      if @isOnTopBound() then @bounceY()
-      else if @isOutsideBottomBound() then @delayReset()
-
-      if @isCollidingWith(entities.get("player")) then @bounceOffPlayer()
-      else if @isCollidingWithBricks() then @bounceY()
+      super # constrain the coords
+      @bounceX()         if @isOnBoundX()
+      @bounceY()         if @isOnTopBound() or @isCollidingWithBricks()
+      @bounceOffPlayer() if @isCollidingWith(entities.get("player"))
+      @delayReset()      if @isOutsideBottomBound()
       @
 
     # @TODO: This is sloppy. Clean it up.
