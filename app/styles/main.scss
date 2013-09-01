@@ -48,7 +48,7 @@ body {
 }
 
 .block {
-  @include transition(all 1s ease-in);
+  @include transition(transform 1s ease-in);
   position: absolute;
   width: $block-width;
   height: $block-height;
