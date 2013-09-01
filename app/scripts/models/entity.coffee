@@ -87,6 +87,10 @@ define (require) ->
       @shouldUpdate = false
       @
 
+    doRender: ->
+      @view.doRender()
+      @
+
     # Simple method that checks the boolean or other interesting
     # methods. Meant to be overridden as needed.
     needsToUpdate: ->

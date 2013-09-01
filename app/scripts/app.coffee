@@ -17,12 +17,11 @@ define (require) ->
 
     start: ->
       @entities = entities
-      @views = []
       @createInstances().tick()
       @
 
     createInstances: ->
-      @createStructures().createModels().createViews()
+      @createStructures().createEntities()
       @
 
     createStructures: ->
@@ -30,34 +29,24 @@ define (require) ->
       @controls = new Controls
       @
 
-    addView: (view) ->
-      @views.push(view)
-      @
-
     addEntity: (name, entity, overwrite) ->
-      @entities.set.apply(@entities, arguments)
+      entity = entity.model or entity.collection or entity
+      @entities.set(name, entity, overwrite)
+      window[name] = entity # @TODO: remove this debug global
       @
 
-    createModels: -> @
-
-    createViews: ->
-      player = new Player
+    createEntities: ->
+      @addEntity "player", new Player
         el: "#player-1"
         model: new Paddle {}, { bounds: @bounds }
-      @addView(player).addEntity("player", player.model)
-      window.player = player
 
-      ball = new BallView
+      @addEntity "ball", new BallView
         el: "#ball"
         model: new Ball {}, { bounds: @bounds }
-      @addView(ball).addEntity("ball", ball.model)
-      window.ball = ball
 
-      bricks = new BricksView
+      @addEntity "bricks", new BricksView
         el: "#blocks-grid"
         collection: new Bricks null, { rows: 5, cols: 10, bounds: @bounds }
-      for brickCid, brickView of bricks.childViews
-        @addView(brickView).addEntity("brick-#{brickCid}", brickView.model)
 
       @
 
@@ -66,9 +55,11 @@ define (require) ->
       @
 
     render: ->
-      view.doRender() for view in @views
+      entity.doRender() for name, entity of @entities.all()
       @
 
     tick: ->
+      # Separate updating and rendering even though it causes two of the same
+      # loops for performance reasons (groups renderings into one set of tasks).
       @update().render()
       raf => @tick()

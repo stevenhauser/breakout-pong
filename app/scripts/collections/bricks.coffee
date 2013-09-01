@@ -1,9 +1,9 @@
 define (require) ->
 
-  Base = require "collections/base"
+  Entities = require "collections/entities"
   Brick = require "models/brick"
 
-  class Bricks extends Base
+  class Bricks extends Entities
 
     model: Brick
 

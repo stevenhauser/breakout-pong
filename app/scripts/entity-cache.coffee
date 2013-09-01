@@ -16,7 +16,9 @@ define (require) ->
       if !overwrite and @entities[name]?
         throw "EntityCache::set - Already has entity with name `#{name}`"
       @entities[name] = entity
-      @listenTo entity, "destroy", @onDestroyEntity
+      # Only listen to destroy events on entity models, not collections
+      # because they'll handle their own removal
+      @listenTo(entity, "destroy", @onDestroyEntity) if entity.idAttribute?
       @
 
     remove: (entityOrName) ->

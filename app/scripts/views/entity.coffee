@@ -8,6 +8,9 @@ define (require) ->
 
     constructor: ->
       super
+      # Set up 1-to-1 relationship with model for entities for a simpler
+      # game loop and entity cache.
+      @model.view = @
       @listenTo(@model, "change", @onEntityChange) if @model
       @render()
 

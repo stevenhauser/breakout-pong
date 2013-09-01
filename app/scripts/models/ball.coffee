@@ -38,14 +38,13 @@ define (require) ->
       @delayReset()      if @isOutsideBottomBound()
       @
 
-    # @TODO: This is sloppy. Clean it up.
     isCollidingWithBricks: ->
-      bricks = _.filter entities.all(), (entity, name) -> name.indexOf("brick") > -1
-      for brickName, brick of bricks
+      isColliding = false
+      entities.get("bricks").each (brick) =>
         if @isCollidingWith(brick)
           brick.trigger("collided", @)
-          return true
-      false
+          isColliding = true
+      isColliding
 
     bounceOffPlayer: ->
       player = entities.get("player")
