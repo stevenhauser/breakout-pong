@@ -27,10 +27,6 @@ define (require) ->
       @$el.removeClass("invisible")
       @
 
-    render: ->
-      @el.style.left = utils.pixelize @model.x()
-      @
-
     isMovementKey: (key) ->
       key is "left" or key is "right"
 

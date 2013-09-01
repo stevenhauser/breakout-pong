@@ -1,6 +1,7 @@
 define (require) ->
 
   Base = require "views/base"
+  utils = require "utils"
 
   class Entity extends Base
 
@@ -18,10 +19,20 @@ define (require) ->
       @model.width(@el.offsetWidth).height(@el.offsetHeight)
       @
 
+    updateCoords: ->
+      x = utils.pixelize @model.x()
+      y = utils.pixelize @model.y()
+      @el.style.webkitTransform = "translate3d(#{x}, #{y}, 0)"
+      @
+
     doRender: ->
       return unless @shouldRender or @needsToRender()
       @render()
       @shouldRender = false
+      @
+
+    render: ->
+      @updateCoords()
       @
 
     # Override as needed when setting `shouldRender` isn't enough

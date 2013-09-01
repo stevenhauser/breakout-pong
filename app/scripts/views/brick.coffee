@@ -7,6 +7,9 @@ define (require) ->
 
     className: "block"
 
+    # Use top/left instead of default `render` (transform + translate3d)
+    # because the `.falling` class uses `transform` and the bricks only render
+    # once unless the viewport is resized.
     render: ->
       @el.style.left   = utils.pixelize @model.x()
       @el.style.top    = utils.pixelize @model.y()

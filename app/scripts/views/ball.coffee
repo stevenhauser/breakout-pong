@@ -10,8 +10,3 @@ define (require) ->
       @setDimensions()
       @model.reset()
       @
-
-    render: ->
-      @el.style.left = utils.pixelize @model.x()
-      @el.style.top  = utils.pixelize @model.y()
-      @
