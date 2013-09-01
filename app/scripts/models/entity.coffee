@@ -9,7 +9,8 @@ define (require) ->
 
     constructor: ->
       super
-      @on "change", @onChangeObject
+      @on "change", @onChangeEntity
+      @on "destroy", @onDestroyEntity
 
     shorthand: [
       "width"
@@ -100,8 +101,13 @@ define (require) ->
       @x(@constrainedX()).y(@constrainedY())
       @
 
-    onChangeObject: ->
+    onChangeEntity: ->
       @shouldUpdate = true
+
+    onDestroyEntity: ->
+      @shouldUpdate = false
+      @view = null
+      @stopListening()
 
   Entity::constrainedX       = _.partial Entity::constrainedCoord, "x"
   Entity::constrainedY       = _.partial Entity::constrainedCoord, "y"
