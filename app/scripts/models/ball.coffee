@@ -57,7 +57,7 @@ define (require) ->
         x: @midBoundX()
         y: @midBoundY()
         dirX: @randomDirection()
-        dirY: @randomDirection()
+        dirY: 1
         speedX: @randomSpeed()
         speedY: @randomSpeed()
       @calculateVelocityX().calculateVelocityY()
