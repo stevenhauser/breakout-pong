@@ -30,12 +30,15 @@ define (require) ->
       height: 0
       x: 0
       y: 0
-      dirX: 1 # must be -1, 0, or 1
-      dirY: 1 # must be -1, 0, or 1
+      dirX: 0 # must be -1, 0, or 1
+      dirY: 0 # must be -1, 0, or 1
       speedX: 0
       speedY: 0
       vx: 0
       vy: 0
+
+    identifier: ->
+      @constructor.name + "#" + @cid
 
     constrainedCoord: (axis) ->
       newCoord     = @calcCoord(axis)
@@ -98,7 +101,28 @@ define (require) ->
       @shouldUpdate or @isMoving()
 
     update: ->
-      @x(@constrainedX()).y(@constrainedY())
+      @moveX(@dirX())
+        .moveY(@dirY())
+        .x(@constrainedX())
+        .y(@constrainedY())
+      @
+
+    changeSpeed: (axis, delta) ->
+      axisUpper = axis.toUpperCase()
+      speedProp = "speed#{axisUpper}"
+      newSpeed  = @[speedProp]() + delta
+      maxAxisSpeed = @["maxSpeed#{axisUpper}"] or @maxSpeed
+      minAxisSpeed = @["minSpeed#{axisUpper}"] or @minSpeed
+      newSpeed = Math.min(newSpeed, maxAxisSpeed)
+      newSpeed = Math.max(newSpeed, minAxisSpeed)
+      @[speedProp](newSpeed)
+      @
+
+    accelerate: (axis) ->
+      axisUpper = axis.toUpperCase()
+      speedProp = "speed#{axisUpper}"
+      delta = @[speedProp]() * @acceleration
+      @changeSpeed(axis, delta)
       @
 
     onChangeEntity: ->
@@ -119,6 +143,10 @@ define (require) ->
   Entity::calculateVelocityY = _.partial Entity::calculateVelocity, "y"
   Entity::calcX              = _.partial Entity::calcCoord, "x"
   Entity::calcY              = _.partial Entity::calcCoord, "y"
+  Entity::changeSpeedX       = _.partial Entity::changeSpeed, "x"
+  Entity::changeSpeedY       = _.partial Entity::changeSpeed, "y"
+  Entity::accelerateX        = _.partial Entity::accelerate, "x"
+  Entity::accelerateY        = _.partial Entity::accelerate, "y"
 
   Entity.shorthandify()
 

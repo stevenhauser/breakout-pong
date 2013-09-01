@@ -2,23 +2,26 @@ define (require) ->
 
   bouncable =
 
+    bouncable: ->
+      @listenTo @, "collided", @onBouncableCollided
+      @
+
     reverseDirection: (axis) ->
       dirProp = "dir#{axis.toUpperCase()}"
       @[dirProp]( @[dirProp]() * -1 )
       @
 
-    increaseSpeed: (axis) ->
-      axisUpper = axis.toUpperCase()
-      speedProp = "speed#{axisUpper}"
-      newSpeed = @[speedProp]() * @acceleration
-      newSpeed = if newSpeed < @maxSpeed then newSpeed else @maxSpeed
-      @[speedProp](newSpeed)
-      @
-
     bounce: (axis) ->
-      @increaseSpeed(axis).reverseDirection(axis).calculateVelocity(axis)
+      @accelerate(axis).reverseDirection(axis).calculateVelocity(axis)
       @[axis](@calcCoord(axis))
       @
+
+    bounceOff: (entity) ->
+      @bounce @getMainCollisionAxis(entity)
+      @
+
+    onBouncableCollided: (entity) ->
+      @["bounceOff#{entity.constructor.name}"]?(entity) or @bounceOff(entity)
 
   bouncable.reverseDirectionX  = _.partial bouncable.reverseDirection, "x"
   bouncable.reverseDirectionY  = _.partial bouncable.reverseDirection, "y"

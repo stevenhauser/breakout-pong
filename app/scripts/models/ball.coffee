@@ -8,15 +8,20 @@ define (require) ->
 
   class Ball extends Entity
 
+    minSpeedX: .1
+
+    minSpeedY: 1.2
+
     minSpeed: 1
 
     maxSpeed: 4
 
-    acceleration: 1.04
+    acceleration: .04
 
     resetDelay: 300
 
     initialize: (attrs, opts) ->
+      @bouncable()
       @bounds = opts.bounds
       @
 
@@ -32,24 +37,40 @@ define (require) ->
 
     update: ->
       super # constrain the coords
-      @bounceX()         if @isOnBoundX()
-      @bounceY()         if @isOnTopBound() or @isCollidingWithBricks()
-      @bounceOffPlayer() if @isCollidingWith(entities.get("player"))
-      @delayReset()      if @isOutsideBottomBound()
+      hasReactedOnY = false
+      # Bounce off horizontal bounds easily
+      if @isOnBoundX() then @bounceX()
+      # Do a bit more work to bounce off vertical
+      # bound or reset; they're mutually exclusive.
+      if @isOnTopBound()
+        @bounceY()
+        hasReactedOnY = true
+      else if @isOutsideBottomBound()
+        @delayReset()
+        hasReactedOnY = true
+      # If nothing has happened on the y axis yet, see if
+      # there's been a collision with the player or the bricks, both
+      # being mutually exclusive.
+      hasReactedOnY = @hasCollidedWithPlayer() unless hasReactedOnY
+      hasReactedOnY = @hasCollidedWithBrick() unless hasReactedOnY
       @
 
-    isCollidingWithBricks: ->
-      isColliding = false
-      entities.get("bricks").each (brick) =>
-        if @isCollidingWith(brick)
-          brick.trigger("collided", @)
-          isColliding = true
-      isColliding
+    hasCollidedWithPlayer: ->
+      @isCollidingWith entities.get("player")
 
-    bounceOffPlayer: ->
-      player = entities.get("player")
-      @bounceY()
-      @vx( @vx() + player.vx() / 7 )
+    hasCollidedWithBrick: ->
+      !!entities.get("bricks").find (brick) => @isCollidingWith(brick)
+
+    # This is perhaps one of the dumbest things I've ever written
+    # but it's late and I'm burned out.
+    bounceOffPaddle: (paddle) ->
+      gt0 = (num) -> num > 0
+      lt0 = (num) -> num < 0
+      vxes = [@vx(), paddle.vx()]
+      delta = Math.abs(vxes[1] / 7)
+      delta = if _.every(vxes, gt0) or _.every(vxes, lt0) then delta else -delta
+      @changeSpeedX(delta) if @isMainCollisionAxisY(paddle)
+      @bounceOff(paddle)
       @
 
     reset: ->

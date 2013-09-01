@@ -14,6 +14,14 @@ $ball-size:     20px;
 
 
 
+/* Mixins ---------------------------------------- */
+
+@mixin debug {
+  outline: 1px solid #f00;
+}
+
+
+
 /* Global styles ---------------------------------------- */
 
 * {
@@ -79,6 +87,7 @@ body {
 /* Balls ---------------------------------------- */
 
 .ball {
+  @include debug;
   position: absolute;
   top: 0;
   left: 0;
@@ -87,4 +96,5 @@ body {
   border: 1px solid #000;
   border-radius: $ball-size;
   background: #f0f0f0;
+  z-index: 1;
 }
