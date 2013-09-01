@@ -12,6 +12,14 @@ define (require) ->
       @bounds = opts.bounds
       @
 
+    centerX: ->
+      @x(@midBoundX())
+      @
+
+    pinToBottom: ->
+      @y(@bottomBound())
+      @
+
 
   _.extend Paddle::, boundable
 
