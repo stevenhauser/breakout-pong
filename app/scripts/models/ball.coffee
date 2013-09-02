@@ -81,7 +81,6 @@ define (require) ->
         dirY: 1
         speedX: @randomSpeed()
         speedY: @randomSpeed()
-      @calculateVelocityX().calculateVelocityY()
       @
 
     delayReset: ->
