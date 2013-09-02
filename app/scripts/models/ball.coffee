@@ -64,13 +64,30 @@ define (require) ->
     # This is perhaps one of the dumbest things I've ever written
     # but it's late and I'm burned out.
     bounceOffPaddle: (paddle) ->
-      gt0 = (num) -> num > 0
-      lt0 = (num) -> num < 0
-      vxes = [@vx(), paddle.vx()]
-      delta = Math.abs(vxes[1] / 7)
-      delta = if _.every(vxes, gt0) or _.every(vxes, lt0) then delta else -delta
-      @changeSpeedX(delta) if @isMainCollisionAxisY(paddle)
-      @bounceOff(paddle)
+      mainCollisionSide = @getMainCollisionSide(paddle)
+      # Ignore if the collision is off the top of the ball because
+      # that should never happen.
+      return @ if mainCollisionSide is "top"
+      # If we're colliding on the y axis, now filtered only to the bottom,
+      # adjust the ball's x velocity based on the x velocity of the paddle
+      # so that players have a bit of control over it, then bounce it off
+      # of the paddle (vertically).
+      if @isMainCollisionAxisY(paddle)
+        gt0 = (num) -> num > 0
+        lt0 = (num) -> num < 0
+        vxes = [@vx(), paddle.vx()]
+        delta = Math.abs(vxes[1] / 7)
+        delta = if _.every(vxes, gt0) or _.every(vxes, lt0) then delta else -delta
+        @changeSpeedX(delta).bounceOff(paddle)
+      # If we're colliding on the x axis, bounce off the paddle first to
+      # ensure that the collision is still there, then depending on if
+      # we're hitting the left or right side of the ball, calculate the
+      # offset and set the ball's x coordinate so that it's on the soon-
+      # to-be-set edge of the paddle.
+      else
+        @bounceOff(paddle)
+        delta = if mainCollisionSide is "left" then paddle.width() else -@width()
+        @x paddle.calcX() + delta
       @
 
     reset: ->
