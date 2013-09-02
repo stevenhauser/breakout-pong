@@ -13,7 +13,7 @@ define (require) ->
 
     bounce: (axis) ->
       @accelerate(axis).reverseDirection(axis).calculateVelocity(axis)
-      @[axis](@calcCoord(axis))
+      @[axis](@constrainedCoord(axis))
       @
 
     bounceOff: (entity) ->
