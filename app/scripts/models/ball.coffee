@@ -98,6 +98,7 @@ define (require) ->
         dirY: 1
         speedX: @randomSpeed()
         speedY: @randomSpeed()
+      @trigger "reset"
       @
 
     delayReset: ->

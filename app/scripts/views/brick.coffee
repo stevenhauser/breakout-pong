@@ -7,6 +7,14 @@ define (require) ->
 
     className: "block"
 
+    initialize: ->
+      @setRandomStyle()
+      @
+
+    setRandomStyle: ->
+      @$el.addClass("block-style-#{_.random(1, 5)}")
+      @
+
     # Use top/left instead of default `render` (transform + translate3d)
     # because the `.falling` class uses `transform` and the bricks only render
     # once unless the viewport is resized.

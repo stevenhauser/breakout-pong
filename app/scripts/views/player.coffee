@@ -1,6 +1,7 @@
 define (require) ->
 
   Entity = require "views/entity"
+  colorable = require "views/mixins/colorable"
   vent = require "vent"
   utils = require "utils"
 
@@ -8,8 +9,11 @@ define (require) ->
 
   class Player extends Entity
 
+    slurpFrom: ["Ball"]
+
     initialize: ->
       @bindEvents()
+        .colorable()
         .setDimensions()
         .setPaddleInitialCoords()
         .showPaddle()
@@ -43,3 +47,8 @@ define (require) ->
     onKeyup: (key) ->
       return unless @isMovementKey(key)
       @model.stopMovingX()
+
+
+  _.extend Player::, colorable
+
+  Player
