@@ -4,6 +4,8 @@ define (require) ->
   vent = require "vent"
   utils = require "utils"
 
+  isDown = false
+
   class Player extends Entity
 
     initialize: ->
@@ -35,8 +37,8 @@ define (require) ->
       @model.pinToBottom()
 
     onKeydown: (key) ->
-      return if @model.isMoving() or !@isMovementKey(key)
-      @model.moveX(if key is "left" then -1 else 1)
+      return if isDown or !@isMovementKey(key)
+      @model.dirX(if key is "left" then -1 else 1)
 
     onKeyup: (key) ->
       return unless @isMovementKey(key)

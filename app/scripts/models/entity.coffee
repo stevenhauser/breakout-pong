@@ -52,11 +52,6 @@ define (require) ->
     calcCoord: (axis) ->
       @[axis]() + @["v#{axis}"]()
 
-    move: (axis, dir) ->
-      axisUpper = axis.toUpperCase()
-      @["dir#{axisUpper}"](dir).calculateVelocity(axis)
-      @
-
     calculateVelocity: (axis) ->
       axisUpper = axis.toUpperCase()
       @["v#{axis}"]( @["speed#{axisUpper}"]() * @["dir#{axisUpper}"]() )
@@ -101,8 +96,8 @@ define (require) ->
       @shouldUpdate or @isMoving()
 
     update: ->
-      @moveX(@dirX())
-        .moveY(@dirY())
+      @calculateVelocityX()
+        .calculateVelocityY()
         .x(@constrainedX())
         .y(@constrainedY())
       @
@@ -116,6 +111,10 @@ define (require) ->
       newSpeed = Math.min(newSpeed, maxAxisSpeed)
       newSpeed = Math.max(newSpeed, minAxisSpeed)
       @[speedProp](newSpeed)
+      @
+
+    stopMoving: ->
+      @stopMovingX().stopMovingY()
       @
 
     accelerate: (axis) ->
@@ -133,12 +132,12 @@ define (require) ->
       @view = null
       @stopListening()
 
+  Entity.shorthandify()
+
   Entity::constrainedX       = _.partial Entity::constrainedCoord, "x"
   Entity::constrainedY       = _.partial Entity::constrainedCoord, "y"
-  Entity::moveX              = _.partial Entity::move, "x"
-  Entity::moveY              = _.partial Entity::move, "y"
-  Entity::stopMovingX        = _.partial Entity::moveX, 0
-  Entity::stopMovingY        = _.partial Entity::moveY, 0
+  Entity::stopMovingX        = _.partial Entity::dirX, 0
+  Entity::stopMovingY        = _.partial Entity::dirY, 0
   Entity::calculateVelocityX = _.partial Entity::calculateVelocity, "x"
   Entity::calculateVelocityY = _.partial Entity::calculateVelocity, "y"
   Entity::calcX              = _.partial Entity::calcCoord, "x"
@@ -148,6 +147,5 @@ define (require) ->
   Entity::accelerateX        = _.partial Entity::accelerate, "x"
   Entity::accelerateY        = _.partial Entity::accelerate, "y"
 
-  Entity.shorthandify()
 
   Entity
